@@ -6,11 +6,110 @@
   <title>Page Title</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" type="text/css" media="screen" href="main.css" />
-  <script >
-  
-  </script>
 </head>
 <body>
-  
+  <div class='todo-wrapper'>
+      <h1>Todos</h1>
+        <ul class='todos-list'>
+
+        </ul>
+
+    
+
+
+     <form action="" class='todo-form'>
+        <input type="text" name="todo-text" id="" placeholder="Type todo here" required>
+        <input type='submit' />
+     </form> 
+     <button class='delete-all'>Delete All </button>
+     <button class='check-all'>Check All </button>
+     <button class='uncheck-all'>Uncheck All</button>
+  </div>
 </body>
+
+  <script >
+    const todos = JSON.parse(localStorage.getItem('todos')) || [];
+    const formTodo = document.querySelector('.todo-form');
+    const deleteButton = document.querySelector('.delete-all');
+    const list = document.querySelector('.todos-list')
+    const checkAllButton = document.querySelector('.check-all')
+    const uncheckAllButton = document.querySelector('.uncheck-all')
+    function populateTodos() {
+      list.innerHTML = todos.map((item, idx) => {
+        // console.log(item);
+        return `
+        <li>
+        <input type='checkbox' data-index=${idx} ${item.done ? 'checked' : ''  } />
+        ${item.text}
+        </li>`
+      }).join('');
+    }
+
+    function handleSubmit(e) {
+      e.preventDefault();
+      const text = (this.querySelector('[name=todo-text]')).value
+      console.log(todos);
+      const todoItem = {
+        text,
+        done: false
+      };
+      todos.push(todoItem);
+      localStorage.setItem('todos', JSON.stringify(todos));
+      populateTodos();
+      this.reset();
+    }
+
+    function handleToggle(e) {
+      e.preventDefault();
+      console.log(e);
+      if (!e.target.matches('input')) return;
+      const el = e.target
+      const index = el.dataset.index
+      todos[index].done = !todos[index].done
+      localStorage.setItem('todos', JSON.stringify(todos));
+      populateTodos();
+
+    }
+
+    function clearTodos(e) {
+      e.preventDefault();
+      while (todos.length > 0) {
+        todos.pop();
+      }
+      localStorage.setItem('todos', JSON.stringify(todos));
+
+      populateTodos();
+
+    }
+
+    function checkAll (e) {
+      e.preventDefault();
+
+      todos.forEach(item => {
+        item.done = true
+      })
+
+      localStorage.setItem('todos', JSON.stringify(todos));
+
+      populateTodos();
+    }
+    function uncheckAll (e) {
+      e.preventDefault();
+
+      todos.forEach(item => {
+        item.done = false
+      })
+
+      localStorage.setItem('todos', JSON.stringify(todos));
+
+      populateTodos();
+    }
+
+    formTodo.addEventListener('submit', handleSubmit)    
+    list.addEventListener('click', handleToggle);
+    deleteButton.addEventListener('click', clearTodos)
+    checkAllButton.addEventListener('click', checkAll)
+    uncheckAllButton.addEventListener('click', uncheckAll)
+    populateTodos();
+  </script>
 </html>
