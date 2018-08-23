@@ -3,13 +3,13 @@
 <head>
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Page Title</title>
+  <title>To Dos!</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" type="text/css" media="screen" href="main.css" />
 </head>
 <body>
   <div class='todo-wrapper'>
-      <h1>Todos</h1>
+      <h1>Things to do</h1>
         <ul class='todos-list'>
 
         </ul>
@@ -19,11 +19,22 @@
 
      <form action="" class='todo-form'>
         <input type="text" name="todo-text" id="" placeholder="Type todo here" required>
-        <input type='submit' />
+        <input type='submit' value="Add"/>
      </form> 
      <button class='delete-all'>Delete All </button>
      <button class='check-all'>Check All </button>
-     <button class='uncheck-all'>Uncheck All</button>
+     <button class='uncheck-all'>Uncheck All
+
+    </button>
+    <div class='destroy-button'>
+      <button>destroy me and i will reappear twice</button>
+    </div>
+
+
+    <section class='clock'>
+      
+    </section>
+    <button class='clock-stopper'>Stop the clock!</button>
   </div>
 </body>
 
@@ -34,6 +45,40 @@
     const list = document.querySelector('.todos-list')
     const checkAllButton = document.querySelector('.check-all')
     const uncheckAllButton = document.querySelector('.uncheck-all')
+    const destroyButton = document.querySelector('.destroy-button')
+    const clock = document.querySelector(`.clock`);
+    const clockStopper = document.querySelector('.clock-stopper');
+
+    
+
+
+    function getTime() {
+      const time = new Date();
+      const hours = time.getHours();
+      const mins = time.getMinutes();
+      const secs = time.getSeconds();
+      return (`${hours}:${mins}:${secs}`);
+    }
+    
+    function tickTock() {
+      clock.innerHTML = getTime();
+    }
+     let startClock = setInterval(tickTock, 1000);
+    let clockOff = false;
+    function stopClock() {
+      clockOff = !clockOff
+
+      if (clockOff) {
+        clearInterval(startClock);
+      } else {
+        startClock = setInterval(tickTock, 1000)
+      }
+    }
+
+    tickTock();
+    
+
+
     function populateTodos() {
       list.innerHTML = todos.map((item, idx) => {
         // console.log(item);
@@ -105,11 +150,25 @@
       populateTodos();
     }
 
+    function duplicate(e) {
+      const button1 = document.createElement('button');
+      button1.innerHTML = 'try'
+      const button2 = document.createElement('button');
+      button2.innerHTML = 'again'
+
+     destroyButton.appendChild(button1);
+     destroyButton.appendChild(button2);
+     destroyButton.removeChild(e.target)
+    }
+
     formTodo.addEventListener('submit', handleSubmit)    
     list.addEventListener('click', handleToggle);
     deleteButton.addEventListener('click', clearTodos)
     checkAllButton.addEventListener('click', checkAll)
     uncheckAllButton.addEventListener('click', uncheckAll)
+    destroyButton.addEventListener('click', duplicate)
+    clockStopper.addEventListener('click', stopClock);
+    console.log(destroyButton.textContent);
     populateTodos();
   </script>
 </html>
